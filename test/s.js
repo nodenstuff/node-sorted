@@ -126,3 +126,23 @@ exports.filter = function () {
     assert.deepEqual(s.toArray(), xs, '.filter() modified the elements');
     assert.deepEqual(s_.toArray(), [ 2, 8 ]);
 };
+
+exports.shiftPop = function () {
+    var xs = [ 1, 1, 2, 3, 5, 8, 13 ];
+    var s = sorted(xs);
+    assert.equal(s.shift(), 1);
+    assert.equal(s.shift(), 1);
+    assert.equal(s.shift(), 2);
+    assert.deepEqual(s.toArray(), [ 3, 5, 8, 13 ]);
+    assert.equal(s.pop(), 13);
+    assert.equal(s.pop(), 8);
+    assert.deepEqual(s.toArray(), [ 3, 5 ]);
+    assert.equal(s.shift(), 3);
+    assert.deepEqual(s.toArray(), [ 5 ]);
+    assert.equal(s.pop(), 5);
+    assert.deepEqual(s.toArray(), []);
+    assert.ok(s.shift() === undefined);
+    assert.deepEqual(s.toArray(), []);
+    assert.ok(s.pop() === undefined);
+    assert.deepEqual(s.toArray(), []);
+};

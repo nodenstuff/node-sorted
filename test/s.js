@@ -45,3 +45,30 @@ exports.concat = function () {
         [ 2, 3, 4, 4, 5, 5, 5, 6, 6, 7, 8, 9, 21, 22 ]
     );
 };
+
+exports.insertArray = function () {
+    var s0 = sorted([ 2, 5, 5, 9, 10, 13, 13, 15 ]);
+    var s1 = sorted([]);
+    var s2 = sorted([ 3 ]);
+    var s3 = sorted([ 7, 8, 8, 9, 10, 11, 13, 13, 14 ]);
+    
+    for (var i = 0; i < 30; i++) {
+        var xs = [];
+        var end = Math.floor(Math.random() * 20);
+        for (var j = 0; j < end; j++) {
+            xs.push(Math.floor(Math.random() * (j + 1)));
+        }
+        
+        s0.insert(xs);
+        assert.ok(sorted.isSorted(s0.toArray()), s0.toArray());
+        
+        s1.insert(xs);
+        assert.ok(sorted.isSorted(s1.toArray()), s1.toArray());
+        
+        s2.insert(xs);
+        assert.ok(sorted.isSorted(s2.toArray()), s2.toArray());
+        
+        s3.insert(xs);
+        assert.ok(sorted.isSorted(s3.toArray()), s3.toArray());
+    }
+};

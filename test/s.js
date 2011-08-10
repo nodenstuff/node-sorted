@@ -88,3 +88,16 @@ exports.getSet = function () {
     assert.equal(s.get(2), 9);
     assert.equal(s.get(3), 10);
 };
+
+exports.slice = function () {
+    var xs = [ 1, 1, 2, 3, 5, 8, 13 ];
+    var s = sorted(xs);
+    
+    for (var i = 0; i < xs.length; i++) {
+        for (var j = i; j < xs.length; j++) {
+            var sliced = s.slice(i,j).toArray();
+            assert.ok(sorted.isSorted(sliced));
+            assert.deepEqual(sliced, xs.slice(i,j));
+        }
+    }
+};

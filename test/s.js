@@ -101,3 +101,17 @@ exports.slice = function () {
         }
     }
 };
+
+exports.map = function () {
+    var xs = [ 1, 1, 2, 3, 5, 8, 13 ];
+    var s = sorted(xs);
+    var s_ = s.map(function (x) { return 15 - x });
+    assert.ok(sorted.isSorted(s_.toArray()));
+    
+    assert.deepEqual(xs, [ 1, 1, 2, 3, 5, 8, 13 ], 'xs was modified');
+    assert.deepEqual(s.toArray(), xs, '.map() modified the elements');
+    assert.deepEqual(
+        s_.toArray(),
+        xs.slice().reverse().map(function (x) { return 15 - x })
+    );
+};

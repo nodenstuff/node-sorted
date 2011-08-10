@@ -41,6 +41,18 @@ function cmp (a, b) {
 than. If `cmp` returns a value for which comparisons fail such as `NaN` it will throw
 a RangeError.
 
+s.isSorted(xs, cmp)
+-------------------
+
+Return whether `xs` is sorted using `cmp`.
+`xs` can be an array or a sorted instance, which always return true.
+
+s.fromSorted(xs, cmp)
+---------------------
+
+Create a new sorted structure from a pre-sorted array or sorted object `xs`
+using a comparison `cmp` which falls back to the default if unspecified.
+
 s.push(x, ...), s.unshift(x, ...)
 ---------------------------------
 

@@ -3,17 +3,51 @@ var sorted = module.exports = function (xs, cmp) {
         cmp = arguments[0];
         xs = arguments[1];
     }
-    
     if (!xs) xs = [];
-    var isSorted = false;
-    
-    for (var i = 1; i < xs.length; i++) {
-        if (xs[i-1] > xs[i]) isSorted = false;
-    }
     
     return sorted.fromSorted(
-        isSorted ? xs.slice() : xs.slice().sort()
+        sorted.isSorted(xs) ? xs.slice() : xs.slice().sort()
     );
+};
+
+sorted.isSorted = function (xs, cmp) {
+    if (xs instanceof Sorted) return true;
+    if (xs.length === 1) return true;
+    
+    var isSorted = true;
+    
+    if (cmp) {
+        for (var i = 1; i < xs.length; i++) {
+            var c = cmp(xs[i-1], xs[i]);
+            if (c > 0) {
+                isSorted = false;
+                break;
+            }
+            else if (c < 0) {}
+            else if (c === 0) {}
+            else {
+                isSorted = false;
+                break;
+            }
+        }
+    }
+    else {
+        for (var i = 1; i < xs.length; i++) {
+            var x = xs[i-1], y = xs[i];
+            if (x > y) {
+                isSorted = false;
+                break;
+            }
+            else if (x < y) {}
+            else if (x === y) {}
+            else {
+                isSorted = false;
+                break;
+            }
+        }
+    }
+    
+    return isSorted;
 };
 
 sorted.fromSorted = function (xs, cmp) {

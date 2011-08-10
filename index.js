@@ -25,7 +25,10 @@ var Sorted = exports.Sorted = function (xs, cmp) {
     this.length = xs.length;
     
     this.compare = cmp || function (a, b) {
-        return a > b ? 1 : a < b ? -1 : 0;
+        if (a == b) return 0
+        else if (a > b) return 1
+        else if (a < b) return -1
+        else throw new RangeError('Unstable comparison: ' + a + ' cmp ' + b)
     };
 };
 
@@ -55,10 +58,12 @@ Sorted.prototype.splice = function (ix, len) {
     return res;
 };
 
-Sorted.prototype.findIndex = function (x) {
+Sorted.prototype.findIndex = function (x, start, end) {
     var elems = this.elements;
+    if (start === undefined) start = 0;
+    if (end === undefined) end = elems.length;
     
-    for (var i = 0, j = elems.length; ;) {
+    for (var i = start, j = end; ;) {
         var k = Math.floor((i + j) / 2);
         if (k === elems.length) break;
         if (i === j) break;
@@ -79,4 +84,72 @@ Sorted.prototype.findIndex = function (x) {
 Sorted.prototype.indexOf = function (x) {
     var i = this.findIndex(x);
     return this.elements[i] === x ? i : -1;
+};
+
+Sorted.prototype.inspect = function () {
+    return '<Sorted [' + this.elements.join(',') + ']>'
+};
+
+Sorted.prototype.toArray = function () {
+    return this.elements.slice()
+};
+
+Sorted.prototype.sort = function (cmp) {
+    if (!cmp || this.compare === cmp) {
+        return this.slice();
+    }
+    else {
+        return sorted(this.elements, cmp);
+    }
+};
+
+Sorted.prototype.concat = function () {
+    var xs = this.slice();
+    for (var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i];
+        if (Array.isArray(arg)) {
+            xs.push.apply(xs, arg);
+        }
+        else if (arg instanceof Sorted) {
+            xs.insert(arg);
+        }
+        else {
+            xs.push(arg);
+        }
+    }
+    return xs;
+};
+
+Sorted.prototype.insert = function (xs) {
+    if (!(xs instanceof Sorted)) {
+        xs = sorted(Array.isArray(xs) ? xs : [ xs ]);
+    }
+    
+    var x = xs.at(0);
+    var y = xs.at(xs.length - 1);
+    
+    var start = this.findIndex(x);
+    var end = this.findIndex(y) + 1;
+    
+    for (var i = 0; i < xs.length; i++) {
+        var x = xs.at(i);
+        var ix = this.findIndex(x, start, end);
+        this.elements.splice(ix, 0, x);
+        end ++;
+    }
+    
+    this.length = this.elements.length;
+    
+    return this;
+};
+
+Sorted.prototype.at = function (i) {
+    return this.elements[i];
+};
+
+Sorted.prototype.slice = function () {
+    return sorted.fromSorted(
+        this.elements.slice.apply(this.elements, arguments),
+        this.compare
+    );
 };

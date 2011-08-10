@@ -30,7 +30,9 @@ exports.random = function () {
         var xs = sorted();
         for (var j = 0; j < 10; j++) {
             xs.push(Math.floor(Math.random() * (j + 1)));
+            xs.unshift(Math.floor(Math.random() * (j + 1)));
         }
+        assert.ok(sorted.isSorted(xs));
         assert.ok(sorted.isSorted(xs.toArray()));
     }
 };

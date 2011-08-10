@@ -115,3 +115,14 @@ exports.map = function () {
         xs.slice().reverse().map(function (x) { return 15 - x })
     );
 };
+
+exports.filter = function () {
+    var xs = [ 1, 1, 2, 3, 5, 8, 13 ];
+    var s = sorted(xs);
+    var s_ = s.filter(function (x) { return x % 2 === 0 });
+    assert.ok(sorted.isSorted(s_.toArray()));
+    
+    assert.deepEqual(xs, [ 1, 1, 2, 3, 5, 8, 13 ], 'xs was modified');
+    assert.deepEqual(s.toArray(), xs, '.filter() modified the elements');
+    assert.deepEqual(s_.toArray(), [ 2, 8 ]);
+};

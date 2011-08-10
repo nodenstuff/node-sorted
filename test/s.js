@@ -36,3 +36,12 @@ exports.random = function () {
         assert.ok(sorted.isSorted(xs.toArray()));
     }
 };
+
+exports.concat = function () {
+    assert.deepEqual(
+        sorted([4,5,6]).concat(
+            [2,3,4,5], 6, sorted([5,7,8,9]), sorted([21,22])
+        ).toArray(),
+        [ 2, 3, 4, 4, 5, 5, 5, 6, 6, 7, 8, 9, 21, 22 ]
+    );
+};

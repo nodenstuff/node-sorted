@@ -5,14 +5,19 @@ var sorted = module.exports = function (xs, cmp) {
     }
     if (!xs) xs = [];
     
-    return sorted.fromSorted(
-        sorted.isSorted(xs) ? xs.slice() : xs.slice().sort()
-    );
+    if (sorted.isSorted(xs, cmp)) {
+        return sorted.fromSorted(xs, cmp);
+    }
+    else {
+        var s = sorted.fromSorted([], cmp);
+        for (var i = 0; i < xs.length; i++) s.push(xs[i]);
+        return s;
+    }
 };
 
 sorted.isSorted = function (xs, cmp) {
     if (xs instanceof Sorted) return true;
-    if (xs.length === 1) return true;
+    if (xs.length <= 1) return true;
     
     var isSorted = true;
     
@@ -99,7 +104,7 @@ Sorted.prototype.findIndex = function (x, start, end) {
     
     for (var i = start, j = end; ;) {
         var k = Math.floor((i + j) / 2);
-        if (k === elems.length) break;
+        if (k > end) break;
         if (i === j) break;
         
         var cmp = this.compare(x, elems[k]);
@@ -155,15 +160,23 @@ Sorted.prototype.concat = function () {
 };
 
 Sorted.prototype.insert = function (xs) {
+    if (xs.length === 0) return this;
+    
     if (!(xs instanceof Sorted)) {
-        xs = sorted(Array.isArray(xs) ? xs : [ xs ]);
+        xs = sorted(Array.isArray(xs) ? xs : [ xs ], this.compare);
     }
+    if (!sorted.isSorted(xs.toArray())) throw new Error('not sorted: ' + xs.join(','));
     
     var x = xs.get(0);
-    var y = xs.get(xs.length - 1);
-    
     var start = this.findIndex(x);
-    var end = this.findIndex(y) + 1;
+    
+    if (xs.length > 1) {
+        var y = xs.get(xs.length - 1);
+        var end = Math.min(this.length, this.findIndex(y) + 1);
+    }
+    else {
+        var end = start + 1;
+    }
     
     for (var i = 0; i < xs.length; i++) {
         var x = xs.get(i);

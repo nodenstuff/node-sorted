@@ -72,3 +72,19 @@ exports.insertArray = function () {
         assert.ok(sorted.isSorted(s3.toArray()), s3.toArray());
     }
 };
+
+exports.getSet = function () {
+    var s = sorted([ 2, 5, 5, 9, 10, 13, 13, 15 ]);
+    assert.equal(s.get(0), 2);
+    assert.equal(s.get(1), 5);
+    assert.equal(s.get(2), 5);
+    assert.equal(s.get(3), 9);
+    
+    s.set(2, 6);
+    assert.equal(s.get(2), 6);
+    assert.equal(s.get(3), 9);
+    
+    s.set(2, 10);
+    assert.equal(s.get(2), 9);
+    assert.equal(s.get(3), 10);
+};

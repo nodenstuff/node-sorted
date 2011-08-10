@@ -125,14 +125,14 @@ Sorted.prototype.insert = function (xs) {
         xs = sorted(Array.isArray(xs) ? xs : [ xs ]);
     }
     
-    var x = xs.at(0);
-    var y = xs.at(xs.length - 1);
+    var x = xs.get(0);
+    var y = xs.get(xs.length - 1);
     
     var start = this.findIndex(x);
     var end = this.findIndex(y) + 1;
     
     for (var i = 0; i < xs.length; i++) {
-        var x = xs.at(i);
+        var x = xs.get(i);
         var ix = this.findIndex(x, start, end);
         this.elements.splice(ix, 0, x);
         end ++;
@@ -143,8 +143,14 @@ Sorted.prototype.insert = function (xs) {
     return this;
 };
 
-Sorted.prototype.at = function (i) {
+Sorted.prototype.get = function (i) {
     return this.elements[i];
+};
+
+Sorted.prototype.set = function (i, x) {
+    this.elements.splice(i, 1);
+    this.push(x);
+    return this;
 };
 
 Sorted.prototype.slice = function () {
@@ -152,4 +158,38 @@ Sorted.prototype.slice = function () {
         this.elements.slice.apply(this.elements, arguments),
         this.compare
     );
+};
+
+Sorted.prototype.map = function () {
+    return sorted(
+        this.elements.map.apply(this.elements, arguments),
+        this.compare
+    );
+};
+
+Sorted.prototype.filter = function () {
+    return sorted(
+        this.elements.filter.apply(this.elements, arguments),
+        this.compare
+    );
+};
+
+[ 'forEach', 'reduce', 'reduceRight', 'every', 'some', 'join' ]
+    .forEach(function (name) {
+        Sorted.prototype[name] = function () {
+            return this.elements[name].apply(this.elements, arguments);
+        };
+    })
+;
+
+Sorted.prototype.shift = function () {
+    var x = this.elements.shift();
+    this.length = this.elements.length;
+    return x;
+};
+
+Sorted.prototype.pop = function () {
+    var x = this.elements.pop();
+    this.length = this.elements.length;
+    return x;
 };

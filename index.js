@@ -168,7 +168,7 @@ Sorted.prototype.map = function () {
 };
 
 Sorted.prototype.filter = function () {
-    return sorted(
+    return sorted.fromSorted(
         this.elements.filter.apply(this.elements, arguments),
         this.compare
     );
